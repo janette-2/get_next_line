@@ -34,6 +34,10 @@ int	main(void)
 
 	fd = open("Reference_text_THG.txt", O_RDONLY);
 	printf("Tamaño: %d\n", line_size(fd));
+	printf("Tamaño: %d\n", line_size(fd));
+	printf("Tamaño: %d\n", line_size(fd));
+	printf("Tamaño: %d\n", line_size(fd));
+	printf("Tamaño: %d\n", line_size(fd));
 
 	return (0);
 }
