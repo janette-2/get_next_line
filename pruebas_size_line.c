@@ -1,28 +1,34 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-/* The EOF is identified by the int that read() returns.
+/* LINE_SIZE
+
+Analizes the original text, byte by byte, and returns
+the amount of bytes that were found in a single line
+before jumping to the next one or before the text ends.
+
+Notes:--------------------------
+The EOF is identified by the int that read() returns.
 If you obtain a 0, there's nothing to read, so you have 
 finished the file. 
 If you get a -1, there is an error with the file or
-it doesn't exist. */
+it doesn't exist. 
+Notes: -------------------------------
+In the while is important to FIRST check if the reading has been done,
+with the amount of bytes copied. This will also fill the buffer 
+read_one[0] BEFORE analizing the content inside of it.*/
 
-int line_size(int fd)
+int	line_size(int fd)
 {
-	int	size;
-	int read_bytes;
-	char *read_one;
+	int		size;
+	char	*read_one;
 
 	size = 0;
-	read_one = malloc(2);
+	read_one = malloc(1);
 	if (!read_one)
 		return (0);
-	read_bytes = 1;
-	while (read_one[0] != '\n' && read_bytes == 1)
-	{
+	while ((read(fd, read_one, 1) == 1) && read_one[0] != '\n')
 		size++;
-		read_bytes = read(fd, read_one, 1);
-	}
 	return (size);
 }
 #include <stdio.h>
@@ -31,13 +37,14 @@ int line_size(int fd)
 int	main(void)
 {
 	int	fd;
+	int	i;
 
 	fd = open("Reference_text_THG.txt", O_RDONLY);
-	printf("Tamaño: %d\n", line_size(fd));
-	printf("Tamaño: %d\n", line_size(fd));
-	printf("Tamaño: %d\n", line_size(fd));
-	printf("Tamaño: %d\n", line_size(fd));
-	printf("Tamaño: %d\n", line_size(fd));
-
+	i = 0;
+	while (i != 26)
+	{
+		printf("Tamaño: %d\n", line_size(fd));
+		i++;
+	}
 	return (0);
 }
