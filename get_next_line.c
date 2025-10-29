@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:31:58 by janrodri          #+#    #+#             */
-/*   Updated: 2025/10/29 19:40:11 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/10/29 21:15:78 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*get_next_line(int fd)
 	char			*read_buffer;
 	char			*left_line_buffer;
 	int				line_len;
-	int				read_copied;
+	int				len_copied;
 
 	line_len = line_size(fd);
 	line_buffer = NULL;
@@ -41,8 +41,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (!line_buffer)
 		line_buffer = malloc(line_len + 1);// + 1 ??
-	read_copied = str_copy(line_buffer, read_buffer);
-	if (read_copied < line_len)
+	len_copied = str_cat(line_buffer, read_buffer);
+	if (len_copied < line_len)
 	{
 		free(read_buffer);
 		get_next_line(fd);

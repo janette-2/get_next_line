@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 14:14:37 by janrodri          #+#    #+#             */
-/*   Updated: 2025/10/29 19:59:05 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/10/29 21:11:32 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,25 +87,31 @@ in 'line_buffer' with this length. If the are equal, everything copied
 succesfully. If they differ, it means that '\n' was found in the middle and it 
 stopped copying the found chars after the new line sign. */
 
-size_t	str_copy(char *line_buffer, char *read_buffer)
+size_t	str_cat(char *line_buffer, char *read_buffer)
 {
 	size_t	i;
-	size_t	len;
+	size_t	j;
+	size_t	len_read;
+	size_t	len_line;
 
-	len = 0;
+	len_read = 0;
 	while (read_buffer)
-		len++;
+		len_read++;
+	j = 0;
+	while(line_buffer)
+		j++;
+	len_line = j;
 	i = 0;
 	while ((read_buffer[i] != '\n') || (read_buffer[i] != '\0'))
-	{
-		line_buffer[i] = read_buffer[i];
-		i++;
-	}
-	line_buffer[i] = '\0';
-	return (len);
+		line_buffer[j++] = read_buffer[i++];
+	line_buffer[j] = '\0';
+	return (len_read + len_line);
 }
-while (i < read_copied)
-if ()
+
+if (read_copied < line_size)
 {
-	
+	free(read_buffer);
+	get_next_line(fd);
+	if 
+}
 

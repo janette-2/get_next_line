@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:20:14 by janrodri          #+#    #+#             */
-/*   Updated: 2025/10/29 19:41:49 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/10/29 21:11:40 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 char	*get_next_line(int fd);
 int		line_size(int fd);
 char	*read_buffer_size(int fd, int line_size);
-size_t	str_copy(char *line_buffer, char *read_buffer);
+size_t	str_cat(char *line_buffer, char *read_buffer);
 
 
 #endif
