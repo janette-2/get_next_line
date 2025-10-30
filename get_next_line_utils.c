@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 14:14:37 by janrodri          #+#    #+#             */
-/*   Updated: 2025/10/29 21:11:32 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/10/30 01:15:28 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,19 @@ char	*read_buffer_size(int fd, int line_size)
 		return (NULL);
 	if (BUFFER_SIZE <= line_size)
 	{
-		read_buffer = malloc(BUFFER_SIZE + 1);
+		read_buffer = malloc(BUFFER_SIZE);
 		if (!read_buffer)
 			return (NULL);
 		read(fd, read_buffer, BUFFER_SIZE);
+		read_buffer[BUFFER_SIZE - 1] = '\0';
 	}
 	if (BUFFER_SIZE > line_size)
 	{
-		read_buffer = malloc(line_size + 1);
+		read_buffer = malloc(line_size);
 		if (!read_buffer)
 			return (NULL);
 		read(fd, read_buffer, line_size);
+		read_buffer[line_size - 1] = '\0';
 	}
 	return (read_buffer);
 }
@@ -107,11 +109,3 @@ size_t	str_cat(char *line_buffer, char *read_buffer)
 	line_buffer[j] = '\0';
 	return (len_read + len_line);
 }
-
-if (read_copied < line_size)
-{
-	free(read_buffer);
-	get_next_line(fd);
-	if 
-}
-

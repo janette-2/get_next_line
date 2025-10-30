@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:31:58 by janrodri          #+#    #+#             */
-/*   Updated: 2025/10/29 21:15:78 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/10/30 01:14:08 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ char	*get_next_line(int fd)
 	static char		*line_buffer;
 	char			*read_buffer;
 	char			*left_line_buffer;
-	int				line_len;
+	char			*temp_line;
+	static int		line_len;
 	int				len_copied;
 
 	line_len = line_size(fd);
@@ -40,13 +41,19 @@ char	*get_next_line(int fd)
 	if (!read_buffer)
 		return (NULL);
 	if (!line_buffer)
-		line_buffer = malloc(line_len + 1);// + 1 ??
+		line_buffer = malloc(line_len);
 	len_copied = str_cat(line_buffer, read_buffer);
 	if (len_copied < line_len)
 	{
 		free(read_buffer);
 		get_next_line(fd);
 	}
+	if ()
+	{
+		
+	}
+	temp_line = temp(line_buffer, line_len, read_buffer);
+	return (temp_line);
 	}
 
 /* #include <fcntl.h>
