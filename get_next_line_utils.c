@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 14:14:37 by janrodri          #+#    #+#             */
-/*   Updated: 2025/10/30 13:54:41 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/10/30 21:29:27 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	line_size(int fd)
 	char	*read_one;
 
 	if (fd < 0)
-		return (NULL);
+		return (0);
 	size = 0;
 	read_one = malloc(1);
 	if (!read_one)

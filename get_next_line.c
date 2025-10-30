@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:31:58 by janrodri          #+#    #+#             */
-/*   Updated: 2025/10/30 13:53:14 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/10/30 21:32:43 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,19 @@ static char	*read_over_line(char **line_buffer, int *line_len, int len_copied, c
 	char	*temp_line;
 	int		left_read;
 	
-	temp_line = malloc(*line_size);
+	temp_line = malloc(*line_len);
 	if (!temp_line)
 		return (NULL);
 	str_cat(temp_line, *line_buffer);
 	free(*line_buffer);
 	//*line_buffer = NULL?;
-	left_read = len_copied - *line_size;
+	left_read = len_copied - *line_len;
 	while (left_read > 0)
 	{
 		(*line_buffer)[left_read - 1] = read_buffer[BUFFER_SIZE - left_read];
 		left_read--;
 	}
-	*line_size = 0;
+	*line_len = 0;
 	return (temp_line);
 }
 
@@ -46,14 +46,14 @@ static char	*line_complete(char **line_buffer, int *line_len, char **read_buffer
 {
 	char	*temp_line;
 	
-	temp_line = malloc(*line_size);
+	temp_line = malloc(*line_len);
 	if (!temp_line)
 		return (NULL);
 	str_cat(temp_line, *line_buffer);
 	//falta el \0 en temp_line?
 	free(*line_buffer);
 	free(read_buffer);
-	line_len = 0;
+	*line_len = 0;
 	//LES HACE FALTA A LAS CHAR * PONERLAS A NULL??
 	return (temp_line);
 }
@@ -93,17 +93,18 @@ char	*get_next_line(int fd)
 		read_under_line(&line_buffer, &line_len, &read_buffer, fd);
 	if (len_copied > line_len)
 		temp_line = read_over_line(&line_buffer, &line_len, len_copied, read_buffer);
-	temp_line = line_complete();
+	temp_line = line_complete(&line_buffer, &line_len, &read_buffer);
 	return (temp_line);
 	}
 
-/* #include <fcntl.h>
-
+#include <fcntl.h>
+#include <stdio.h>
 int	main(void)
 {
 	int	fd;
-
+	char *line;
 	fd = open("Reference_text_THG.txt", O_RDONLY);
-	
+	line = get_next_line(fd);
+	printf("%s\n", line);
 	return (0);
-} */
+}
