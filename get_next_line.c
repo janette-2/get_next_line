@@ -6,96 +6,96 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:31:58 by janrodri          #+#    #+#             */
-/*   Updated: 2025/10/30 21:32:43 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/11/10 21:45:46 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-
-static char	*read_over_line(char **line_buffer, int *line_len, int len_copied, char *read_buffer)
+char	*read_into_remain(int fd, char *remain)
 {
-	char	*temp_line;
-	int		left_read;
-	
-	temp_line = malloc(*line_len);
-	if (!temp_line)
+	char	*buffer;
+	int		nb_read;
+
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
 		return (NULL);
-	str_cat(temp_line, *line_buffer);
-	free(*line_buffer);
-	//*line_buffer = NULL?;
-	left_read = len_copied - *line_len;
-	while (left_read > 0)
+	nb_read = 1;
+	while (nb_read > 0 && remain && newline_index(remain) == -1)
 	{
-		(*line_buffer)[left_read - 1] = read_buffer[BUFFER_SIZE - left_read];
-		left_read--;
+		nb_read = read(fd, buffer, BUFFER_SIZE);
+		if (nb_read == -1)
+			return (free(buffer), NULL);
+		if (nb_read > 0)
+		{
+			buffer[nb_read] = '\0';
+			remain = ft_strjoin(remain, buffer, nb_read);
+			if (!remain)
+				return (free(buffer), NULL);
+		}
 	}
-	*line_len = 0;
-	return (temp_line);
+	free(buffer);
+	return (remain);
 }
 
-static void	read_under_line(char **line_buffer, int *line_len, char **read_buffer, int fd)
-{	
-	free(*read_buffer);
-	while (!(*line_buffer)[*line_len - 2])
-		get_next_line(fd);
-	return ;
-}
-
-static char	*line_complete(char **line_buffer, int *line_len, char **read_buffer)
+char	*extract_line_from_remain(char **remain)
 {
-	char	*temp_line;
-	
-	temp_line = malloc(*line_len);
-	if (!temp_line)
+	char	*line;
+	int		index;
+	int		len;
+	char	*rest;
+
+	if (!remain || !*remain)
 		return (NULL);
-	str_cat(temp_line, *line_buffer);
-	//falta el \0 en temp_line?
-	free(*line_buffer);
-	free(read_buffer);
-	*line_len = 0;
-	//LES HACE FALTA A LAS CHAR * PONERLAS A NULL??
-	return (temp_line);
+	index = newline_index(*remain);
+	if (index == -1)
+	{
+		line = ft_strdup(*remain);
+		free(*remain);
+		*remain = NULL;
+		return (line);
+	}
+	len = ft_strlen(*remain);
+	if (index + 1 < len)
+		rest = ft_strdup(*remain + index + 1);
+	else
+		rest = NULL;
+	line = substr_and_free(*remain, 0, index + 1);
+	*remain = rest;
+	return (line);
 }
 
 /* GET_NEXT_LINE
 
-Notes:----------------------------------------------
-The amount of BUFFER_SIZE can be totally arbitrari.
-This doesn't mean that you have to return a single buffer with the amount
-of BUFFER_SIZE. Internally, you will have to keep reading into a 
-buffer[BUFFER_SIZE] and storing that content into a line_buffer[line_size]
-until you get all the chars before the '\n'/EOF sign. 
-
-Notes:---------------------------------------------------
-The static variables,even though you may call the function multiple times,
-they are initialized ONLY ONCE. After they get content inside, they are no 
-longer executing the initialization lines of code after that. When they are 
-first created, the compiler sets them as NULL by default. 
+read_into_remain()-----------------------------------------
+When it starts, it keeps reading untill the storaged chars(remain) 
+contain an '\n' or it finds the EOF. 
 */
 
 char	*get_next_line(int fd)
 {
-	static char		*line_buffer;
-	static int		line_len;
-	char			*read_buffer;
-	char			*temp_line;
-	int				len_copied;
+	static char	*remain;
+	char		*line;
 
-	line_len = line_size(fd);
-	read_buffer = read_buffer_size(fd, line_len);
-	if (!read_buffer)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!line_buffer)
-		line_buffer = malloc(line_len);
-	len_copied = str_cat(line_buffer, read_buffer);
-	if (len_copied < line_len)
-		read_under_line(&line_buffer, &line_len, &read_buffer, fd);
-	if (len_copied > line_len)
-		temp_line = read_over_line(&line_buffer, &line_len, len_copied, read_buffer);
-	temp_line = line_complete(&line_buffer, &line_len, &read_buffer);
-	return (temp_line);
+	if (!remain)
+	{
+		remain = ft_strdup("");
+		if (!remain)
+			return (NULL);
 	}
+	remain = read_into_remain(fd, remain);
+	if (!remain || !*remain)
+	{
+		if (remain)
+			free(remain);
+		remain = NULL;
+		return (NULL);
+	}
+	line = extract_line_from_remain(&remain);
+	return (line);
+}
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -103,8 +103,20 @@ int	main(void)
 {
 	int	fd;
 	char *line;
+	int	count;
+
 	fd = open("Reference_text_THG.txt", O_RDONLY);
+	if (fd < 0)
+		return (1);
 	line = get_next_line(fd);
-	printf("%s\n", line);
+	count = 0;
+	while (line && count < 30)
+	{
+		printf("%s\n", line);
+		free(line);
+		line = get_next_line(fd);
+		count++;
+	}
+	close(fd);
 	return (0);
 }

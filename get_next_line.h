@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:20:14 by janrodri          #+#    #+#             */
-/*   Updated: 2025/11/05 23:19:16 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/11/10 21:26:03 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 # include <unistd.h>
 
 char	*get_next_line(int fd);
-int		length(char *buffer);
-int		str_cat(char **new_buffer, char **ref_buffer);
-char	*str_i_copy(char *ref, char *copy, int copy_index);
-void	init(char	**read_buffer, int *read_length, char	**filling_line);
-int		found_newline(char **read_buffer);
+int		ft_strlen(char *buffer);
+char	*ft_strdup(char *src);
+char	*ft_strjoin(char *s1, char *s2, int len2);
+int		newline_index(char *remain);
+char	*substr_and_free(char *s, int start, int len);
 
 #endif
