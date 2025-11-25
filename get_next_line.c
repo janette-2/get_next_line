@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:31:58 by janrodri          #+#    #+#             */
-/*   Updated: 2025/11/18 19:39:19 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/11/25 20:19:06 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ char	*read_into_remain(int fd, char *remain)
 
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
-		return (NULL);
+		return (free(remain), NULL);
 	nb_read = 1;
 	while (nb_read > 0 && remain && newline_index(remain) == -1)
 	{
 		nb_read = read(fd, buffer, BUFFER_SIZE);
 		if (nb_read == -1)
-			return (free(buffer), NULL);
+			return (free(remain), free(buffer), NULL);
 		if (nb_read > 0)
 		{
 			buffer[nb_read] = '\0';
@@ -104,7 +104,7 @@ char	*get_next_line(int fd)
 	{
 		remain = ft_strdup("");
 		if (!remain)
-			return (NULL);
+			return (free(remain), NULL);
 	}
 	remain = read_into_remain(fd, remain);
 	if (!remain || !*remain)
@@ -117,32 +117,30 @@ char	*get_next_line(int fd)
 	line = extract_line_from_remain(&remain);
 	return (line);
 }
-/* 
-#include <fcntl.h>
+
+/* #include <fcntl.h>
 #include <stdio.h>
 int	main(void)
 {
 	int	fd;
 	char *line;
-	int	count;
 
 	fd = open("Reference_text_THG.txt", O_RDONLY);
 	//--Test with different 'fd' (ex. 0 -> keyboard input)
 	//fd = -1;
 	line = get_next_line(fd);
-	count = 0;
-	while (line && count < 30)
+	while (line)
 	{
-		printf("%s\n", line);
+		printf("%s", line);
 		free(line);
 		line = get_next_line(fd);
-		count++;
 	}
+	free (line);
 	close(fd);
 	return (0);
+
 	//Compile with: 
 	//cc -Wall -Werror -Wextra (...)
 	// get_next_line.c get_next_line_utils.c  -D BUFFER_SIZE=1 && ./a.out 
 
-} 
-*/
+} */
