@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:31:58 by janrodri          #+#    #+#             */
-/*   Updated: 2025/11/26 19:30:47 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/11/26 23:01:45 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*read_into_remain(int fd, char *remain)
 	if (!buffer)
 		return (free(remain), NULL);
 	nb_read = 1;
-	while (nb_read > 0 && remain && newline_index(remain) == -1)
+	while (nb_read > 0)
 	{
 		nb_read = read(fd, buffer, BUFFER_SIZE);
 		if (nb_read == -1)
@@ -59,10 +59,11 @@ char	*read_into_remain(int fd, char *remain)
 			if (!tmp)
 				return (free(buffer), free (remain), NULL);
 			remain = tmp;
+			if (newline_index(buffer) != -1)
+				break ;
 		}
 	}
-	free(buffer);
-	return (remain);
+	return (free(buffer), remain);
 }
 
 /*EXTRACT_LINE_FROM_REMAIN:

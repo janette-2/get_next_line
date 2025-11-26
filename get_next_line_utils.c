@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 14:14:37 by janrodri          #+#    #+#             */
-/*   Updated: 2025/11/26 18:55:07 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/11/26 23:27:51 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ len2 bytes from s2 at the end of s1.
  This is because malloc and free work and modify the 
  'heap' memory zone directly. They have a global impact,
  affecting all the functions, when used in a program.
+ ------------------------------------------------
+ s1 = remain, s2 = buffer, len2 = nb_read
  */
 
 char	*ft_strjoin(char *s1, char *s2, int len2)
@@ -96,8 +98,7 @@ char	*ft_strjoin(char *s1, char *s2, int len2)
 	int		i;
 	int		j;
 
-	if (!s2 || len2 < 0)
-	//if (!s2 || len2 < 0 || len2 > ft_strlen(s2))
+	if (!s2 || len2 < 0 || len2 > BUFFER_SIZE)
 		return (free(s1), NULL);
 	len1 = ft_strlen(s1);
 	new = malloc(len1 + len2 + 1);
