@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 14:14:37 by janrodri          #+#    #+#             */
-/*   Updated: 2025/11/26 12:49:45 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/11/26 18:55:07 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int	newline_index(char *remain)
 	int	i;
 
 	i = 0;
+	if (!remain)
+		return (-1);
 	while (remain[i])
 	{
 		if (remain[i] == '\n')
@@ -94,8 +96,9 @@ char	*ft_strjoin(char *s1, char *s2, int len2)
 	int		i;
 	int		j;
 
-	if (!s2 || len2 < 0 || len2 > ft_strlen(s2))
-		return (NULL);
+	if (!s2 || len2 < 0)
+	//if (!s2 || len2 < 0 || len2 > ft_strlen(s2))
+		return (free(s1), NULL);
 	len1 = ft_strlen(s1);
 	new = malloc(len1 + len2 + 1);
 	if (!new)
@@ -129,15 +132,15 @@ char	*substr_and_free(char *s, int start, int len)
 	int				s_len;
 
 	if (!s || start < 0 || len < 0)
-		return (NULL);
+		return (free(s), NULL);
 	if (start >= ft_strlen(s))
-		return (NULL);
+		return (free(s), NULL);
 	s_len = ft_strlen(s);
 	if (len > s_len - start)
 		len = s_len - start;
 	sub = malloc(len + 1);
 	if (!sub)
-		return (NULL);
+		return (free(s), NULL);
 	i = 0;
 	while (i < len && s[start + i])
 	{

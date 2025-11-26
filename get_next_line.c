@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:31:58 by janrodri          #+#    #+#             */
-/*   Updated: 2025/11/26 13:25:24 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/11/26 19:30:47 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,11 @@ char	*extract_line_from_remain(char **remain)
 	else
 		rest = NULL;
 	line = substr_and_free(*remain, 0, index + 1);
+	if (!line)
+	{
+		free(rest);
+		rest = NULL;
+	}
 	*remain = rest;
 	return (line);
 }
@@ -138,8 +143,8 @@ char	*get_next_line(int fd)
 	line = extract_line_from_remain(&remain);
 	return (line);
 }
-
-/* #include <fcntl.h>
+/* 
+#include <fcntl.h>
 #include <stdio.h>
 int	main(void)
 {
