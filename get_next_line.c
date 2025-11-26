@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:31:58 by janrodri          #+#    #+#             */
-/*   Updated: 2025/11/25 20:19:06 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/11/26 13:25:24 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,32 @@
 
 Initializes the 'remain' buffer by allocating all the 'read' chars into it. 
 The reading keeps on going until a \n or EOF is found inside of 'remain'.
+
+BUFFER FAILS--------------------
+In case that the malloc fails when creating the buffer, but remain already
+had content inside of it. The data that was storaged becames trash, because 
+remain would be set to NULL. In this case, we would need to free the lost 
+storaged memory doing (free(remain)) before returning NULL.
+
+READ FAILS ---------------------------
+A similar approach is found inside the while that fills remain. In case
+that read fails, and if so, it would return -1 of read bytes, then the
+filling would stop, and before returning NULL, it would free all the data
+that was inside of remain, which would be unusable at that moment of failure.
+
+FT_STRJOIN FAILS------------------------------
+In the case that strjoin returns a NULL, in that case the previous remain 
+would not have been freed from the trash content that albergates in the memory.
+To avoid this, instead of directly assigning NULL to remain, we assing the joined
+string into a tmp. If tmp is a NULL we still have the previous content of remain
+as it is, so we free this content before assigning NULL to the final remain. 
 */
 
 char	*read_into_remain(int fd, char *remain)
 {
 	char	*buffer;
 	int		nb_read;
+	char	*tmp;
 
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
@@ -35,9 +55,10 @@ char	*read_into_remain(int fd, char *remain)
 		if (nb_read > 0)
 		{
 			buffer[nb_read] = '\0';
-			remain = ft_strjoin(remain, buffer, nb_read);
-			if (!remain)
-				return (free(buffer), NULL);
+			tmp = ft_strjoin(remain, buffer, nb_read);
+			if (!tmp)
+				return (free(buffer), free (remain), NULL);
+			remain = tmp;
 		}
 	}
 	free(buffer);
@@ -104,7 +125,7 @@ char	*get_next_line(int fd)
 	{
 		remain = ft_strdup("");
 		if (!remain)
-			return (free(remain), NULL);
+			return (NULL);
 	}
 	remain = read_into_remain(fd, remain);
 	if (!remain || !*remain)

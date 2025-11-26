@@ -6,7 +6,7 @@
 /*   By: janrodri <janrodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 14:14:37 by janrodri          #+#    #+#             */
-/*   Updated: 2025/11/18 19:30:32 by janrodri         ###   ########.fr       */
+/*   Updated: 2025/11/26 12:49:45 by janrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ char	*ft_strdup(char *src)
 	char	*dup;
 	int		i;
 
+	if (!src)
+		return (NULL);
 	dup = malloc(ft_strlen(src) + 1);
 	if (dup == NULL)
 		return (NULL);
